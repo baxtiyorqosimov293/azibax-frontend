@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>AziBax — Избранное</title><link rel="stylesheet" href="style.css" /></head>
+<body>
+<div class="page-shell">
+<header class="topbar">
+<a class="brand" href="index.html"><span class="brand-logo">📚</span><div><div class="brand-name">AziBax</div><div class="brand-sub">Моя библиотека</div></div></a>
+<nav class="nav-links"><a href="index.html">Главная</a><a href="favorites.html">Избранное</a></nav>
+<div class="topbar-actions"><button class="ghost-btn" id="logoutBtn">Выйти</button></div>
+</header>
+<section class="section-head"><div><h2>Избранные книги</h2><p id="favMeta">Только для авторизованного пользователя.</p></div></section>
+<section class="book-grid" id="favoritesGrid"></section>
+<section class="empty-state hidden" id="favoritesEmpty"><div class="empty-card"><h3>Пока пусто</h3><p>Добавь книги в избранное со страницы книги.</p></div></section>
+</div>
+<script src="config.js"></script><script src="shared.js"></script><script src="favorites.js"></script>
+</body>
+</html>

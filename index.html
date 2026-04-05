@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AziBax Книга</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <span class="brand-logo">📚</span>
+        <div>
+          <div class="brand-name">AziBax</div>
+          <div class="brand-sub">Книга нового поколения</div>
+        </div>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html">Главная</a>
+        <a href="favorites.html">Избранное</a>
+      </nav>
+      <div class="topbar-actions">
+        <button class="ghost-btn" id="openAuthBtn">Войти</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="badge">Легальная библиотека • MVP</div>
+        <h1>Читай. Слушай. Развивайся.<br/>AziBax для умных людей.</h1>
+        <p>Детективы, драма, психология и саморазвитие в одном приложении.</p>
+        <div class="hero-actions">
+          <a class="primary-btn" href="#catalog">Начать читать</a>
+          <a class="secondary-btn" href="favorites.html">Моя библиотека</a>
+        </div>
+      </div>
+      <div class="hero-panel">
+        <div class="stat-card"><div class="stat-number" id="heroBookCount">100+</div><div class="stat-label">стартовых книг</div></div>
+        <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">главных жанра</div></div>
+        <div class="stat-card"><div class="stat-number">AI</div><div class="stat-label">готово для следующего этапа</div></div>
+      </div>
+    </section>
+
+    <section class="controls" id="catalog">
+      <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="Ищи по названию или автору..." />
+        <button class="primary-btn small" id="searchBtn">Поиск</button>
+      </div>
+      <div class="genre-pills">
+        <button class="pill active" data-genre="">Все</button>
+        <button class="pill" data-genre="detective">Детектив</button>
+        <button class="pill" data-genre="drama">Драма</button>
+        <button class="pill" data-genre="psychology">Психология</button>
+        <button class="pill" data-genre="self_development">Саморазвитие</button>
+      </div>
+    </section>
+
+    <section class="section-head">
+      <div><h2>Каталог книг</h2><p id="catalogMeta">Загружаем книги...</p></div>
+      <button class="ghost-btn" id="refreshBtn">Обновить</button>
+    </section>
+
+    <section class="book-grid" id="booksGrid"></section>
+    <section class="empty-state hidden" id="emptyState"><div class="empty-card"><h3>Ничего не найдено</h3><p>Попробуй другой запрос или жанр.</p></div></section>
+  </div>
+
+  <div class="modal hidden" id="authModal">
+    <div class="modal-card">
+      <div class="modal-head"><h3>Вход в AziBax</h3><button class="icon-btn" id="closeAuthBtn">✕</button></div>
+      <div class="tabs">
+        <button class="tab active" data-tab="login">Вход</button>
+        <button class="tab" data-tab="register">Регистрация</button>
+      </div>
+      <form id="loginForm" class="auth-form">
+        <input type="email" id="loginEmail" placeholder="Email" required />
+        <input type="password" id="loginPassword" placeholder="Пароль" required />
+        <button class="primary-btn full">Войти</button>
+      </form>
+      <form id="registerForm" class="auth-form hidden">
+        <input type="text" id="registerName" placeholder="Имя" />
+        <input type="email" id="registerEmail" placeholder="Email" required />
+        <input type="password" id="registerPassword" placeholder="Пароль" required />
+        <button class="primary-btn full">Создать аккаунт</button>
+      </form>
+      <p class="auth-message" id="authMessage"></p>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="shared.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
