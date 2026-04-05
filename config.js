@@ -1,1 +1,1 @@
-window.AZIBAX_API = "http://127.0.0.1:8000";
+window.AZIBAX_API = "https://azibax-backend.onrender.com";
