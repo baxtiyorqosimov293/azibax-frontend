@@ -1,78 +1,116 @@
-const API = window.AZIBAX_API;
+const API = window.AZIBAX_API || "https://azibax-backend.onrender.com";
 
-function getToken(){
+function getToken() {
   return localStorage.getItem("azibax_token") || "";
 }
 
-function setToken(token){
+function setToken(token) {
   localStorage.setItem("azibax_token", token);
 }
 
-function clearToken(){
+function clearToken() {
   localStorage.removeItem("azibax_token");
 }
 
-async function apiFetch(path, options = {}) {
+function escapeHtml(text = "") {
+  return String(text)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
 
-  const headers = options.headers || {};
+function bookLanguage(book) {
+  if (!book) return "Книга";
+  return book.language || "Книга";
+}
+
+function bookLink(book) {
+  if (!book) return "#";
+  return book.openlibrary_url || "#";
+}
+
+function createBookCard(book) {
+  const title = escapeHtml(book?.title || "Без названия");
+  const author = escapeHtml(book?.author || "Неизвестный автор");
+  const language = escapeHtml(bookLanguage(book));
+  const link = bookLink(book);
+
+  const cover = book?.cover
+    ? `
+      <img
+        class="book-cover-image"
+        src="${book.cover}"
+        alt="${title}"
+        loading="lazy"
+      >
+    `
+    : `
+      <div class="book-cover-fallback">
+        <div class="crest-mini">AZBX</div>
+        <div class="fallback-line"></div>
+        <div class="fallback-label">${language}</div>
+      </div>
+    `;
+
+  return `
+    <article class="book-card">
+      <a class="book-cover-link" href="${link}" target="_blank" rel="noopener noreferrer">
+        <div class="book-cover-shell">
+          ${cover}
+        </div>
+      </a>
+
+      <div class="book-meta">
+        <div class="book-title">${title}</div>
+        <div class="book-author">${author}</div>
+
+        <div class="book-bottom">
+          <span class="book-chip">${language}</span>
+          <a class="book-open-link" href="${link}" target="_blank" rel="noopener noreferrer">
+            Открыть →
+          </a>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+async function apiFetch(path, options = {}) {
+  const headers = { ...(options.headers || {}) };
+  const token = getToken();
 
   if (!(options.body instanceof FormData)) {
     headers["Content-Type"] = "application/json";
   }
 
-  const token = getToken();
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const res = await fetch(API + path, {
+  const response = await fetch(`${API}${path}`, {
     ...options,
     headers
   });
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text);
+  const contentType = response.headers.get("content-type") || "";
+  let payload = null;
+
+  try {
+    payload = contentType.includes("application/json")
+      ? await response.json()
+      : await response.text();
+  } catch (_) {
+    payload = null;
   }
 
-  return res.json();
-}
+  if (!response.ok) {
+    if (payload && typeof payload === "object") {
+      throw new Error(payload.detail || JSON.stringify(payload));
+    }
+    throw new Error(payload || "Ошибка запроса");
+  }
 
-function createBookCard(book){
-
-  const cover = book.cover
-    ? `<img src="${book.cover}" style="width:100%;height:170px;object-fit:cover;border-radius:20px;">`
-    : `<div class="cover-placeholder"></div>`;
-
-  return `
-  <article class="book-card">
-
-    ${cover}
-
-    <div class="book-title">
-      ${book.title || "Без названия"}
-    </div>
-
-    <div class="book-author">
-      ${book.author || "Неизвестный автор"}
-    </div>
-
-    <div class="book-footer">
-
-      <span class="genre-label">
-        ${book.language || "Book"}
-      </span>
-
-      <a class="link-btn"
-         href="${book.openlibrary_url}"
-         target="_blank">
-
-         Читать →
-
-      </a>
-
-    </div>
-
-  </article>
-  `;
+  return payload;
 }
