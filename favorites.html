@@ -3,22 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AziBax — Моё собрание</title>
+  <title>AziBax — Мой кабинет</title>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=8" />
+
+  <link rel="stylesheet" href="style.css?v=31" />
 </head>
 <body>
-  <div class="grain"></div>
-
   <div class="page-shell">
+
     <header class="topbar">
       <a class="brand" href="index.html">
         <div class="crest">
           <div class="crest-crown">♛</div>
           <div class="crest-mark">AZBX</div>
         </div>
+
         <div class="brand-copy">
           <div class="brand-name">AziBax</div>
           <div class="brand-sub">Частное собрание</div>
@@ -27,26 +29,35 @@
 
       <nav class="nav-links">
         <a href="index.html">Собрание</a>
-        <a href="favorites.html">Моё собрание</a>
+        <a href="favorites.html">Кабинет</a>
       </nav>
 
       <button class="ghost-button" id="logoutBtn">Выйти</button>
     </header>
 
-    <section class="catalog-toolbar">
-      <div class="toolbar-top">
-        <div>
-          <div class="section-kicker">Личный кабинет</div>
-          <h2>Сохранённые книги</h2>
-          <p>Этот раздел можно расширить следующим этапом.</p>
-        </div>
-      </div>
+    <section class="section-block">
+      <div class="section-kicker">Личный кабинет</div>
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:44px;margin:0 0 8px;">Моё собрание</h2>
+      <p style="color:var(--muted);margin:0;" id="favoritesMeta">
+        Здесь будут сохранённые книги и личные подборки.
+      </p>
     </section>
 
-    <section>
-      <div class="state-card">
-        Здесь будет твоё личное книжное собрание.
+    <section class="section-block">
+      <div class="section-head-row">
+        <div>
+          <div class="section-kicker">Сохранённое</div>
+          <h2>Избранные книги</h2>
+        </div>
       </div>
+
+      <div class="book-grid" id="favoritesGrid"></div>
+
+      <section id="favoritesEmpty">
+        <div class="state-card">
+          Пока здесь пусто. Следующим этапом можно подключить сохранение книг в личное собрание.
+        </div>
+      </section>
     </section>
 
     <footer class="site-footer">
@@ -58,8 +69,8 @@
     </footer>
   </div>
 
-  <script src="config.js?v=8"></script>
-  <script src="shared.js?v=8"></script>
-  <script src="favorites.js?v=8"></script>
+  <script src="config.js?v=31"></script>
+  <script src="shared.js?v=31"></script>
+  <script src="favorites.js?v=31"></script>
 </body>
 </html>
