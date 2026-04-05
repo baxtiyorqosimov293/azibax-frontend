@@ -1,134 +1,624 @@
 :root{
-  --bg:#0b0b0b;
-  --panel:#111111;
-  --gold:#d4af37;
-  --text:#e5e5e5;
-  --muted:#8b8b8b;
-  --line:rgba(212,175,55,0.15);
+  --bg:#f5efe3;
+  --panel:#efe4d2;
+  --panel-2:#f8f1e7;
+  --gold:#b08a3e;
+  --gold-soft:rgba(176,138,62,.10);
+  --line:#d8c29a;
+  --text:#2b2117;
+  --muted:#7a6855;
+  --shadow:0 18px 50px rgba(120,95,55,.10);
 }
 
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
 
 body{
   margin:0;
-  font-family: "Inter", system-ui;
-  background:var(--bg);
   color:var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(176,138,62,.10), transparent 22%),
+    radial-gradient(circle at top right, rgba(176,138,62,.06), transparent 18%),
+    linear-gradient(180deg, #f8f3ea 0%, #f5efe3 100%);
+  font-family:"Inter", system-ui, sans-serif;
 }
 
-/* HEADER */
+a{color:inherit;text-decoration:none}
+.hidden{display:none!important}
+
+.grain{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.04;
+  background-image:
+    radial-gradient(circle at 20% 20%, #7a6855 0 1px, transparent 1px),
+    radial-gradient(circle at 80% 40%, #7a6855 0 1px, transparent 1px),
+    radial-gradient(circle at 60% 80%, #7a6855 0 1px, transparent 1px);
+  background-size:170px 170px;
+}
+
+.page-shell{
+  width:min(1240px, calc(100% - 36px));
+  margin:0 auto;
+  padding:20px 0 48px;
+  position:relative;
+  z-index:1;
+}
 
 .topbar{
   display:flex;
-  justify-content:space-between;
   align-items:center;
-  padding:18px 28px;
-  border-bottom:1px solid var(--line);
+  justify-content:space-between;
+  gap:18px;
+  padding:16px 20px;
+  border:1px solid var(--line);
+  background:rgba(248,241,231,.88);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(8px);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.crest{
+  width:54px;
+  height:54px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(180deg, rgba(176,138,62,.10), rgba(255,255,255,.35));
+}
+
+.crest-crown{
+  font-size:13px;
+  color:var(--gold);
+  line-height:1;
+}
+
+.crest-mark{
+  font-family:"Cormorant Garamond", serif;
+  font-size:15px;
+  letter-spacing:2px;
+  color:var(--text);
+  margin-top:2px;
 }
 
 .brand-name{
-  font-family:"Playfair Display", serif;
-  font-size:24px;
-  letter-spacing:1px;
+  font-family:"Cormorant Garamond", serif;
+  font-size:31px;
 }
 
 .brand-sub{
+  color:var(--muted);
   font-size:12px;
+  letter-spacing:1.6px;
+  text-transform:uppercase;
+}
+
+.nav-links{
+  display:flex;
+  gap:18px;
   color:var(--muted);
 }
 
-/* HERO */
+.nav-links a:hover{
+  color:var(--text);
+}
+
+.ghost-button,
+.primary-button,
+.secondary-button,
+.icon-button,
+.lang-pill,
+.tab{
+  cursor:pointer;
+  transition:.2s ease;
+}
+
+.ghost-button,
+.primary-button,
+.secondary-button{
+  min-height:44px;
+  padding:12px 18px;
+  border-radius:999px;
+  font-size:13px;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+}
+
+.ghost-button{
+  background:transparent;
+  color:var(--text);
+  border:1px solid var(--line);
+}
+
+.ghost-button:hover{
+  background:rgba(176,138,62,.06);
+}
+
+.primary-button{
+  background:var(--gold);
+  color:#fffaf0;
+  border:1px solid rgba(176,138,62,.3);
+}
+
+.primary-button:hover{
+  filter:brightness(1.03);
+  transform:translateY(-1px);
+}
+
+.secondary-button{
+  background:transparent;
+  color:var(--gold);
+  border:1px solid var(--line);
+}
+
+.small{
+  min-height:40px;
+  padding:10px 15px;
+}
+
+.full{
+  width:100%;
+}
 
 .hero{
-  text-align:center;
-  padding:90px 20px;
+  display:grid;
+  grid-template-columns:1.18fr .82fr;
+  gap:24px;
+  margin-top:24px;
 }
 
-.hero h1{
-  font-family:"Playfair Display", serif;
-  font-size:56px;
-  font-weight:500;
+.hero-left,
+.catalog-toolbar,
+.ornament-card,
+.modal-card,
+.state-card{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(248,241,231,.96), rgba(239,228,210,.96));
+  box-shadow:var(--shadow);
+  border-radius:24px;
 }
 
-.hero p{
-  color:var(--muted);
-  max-width:620px;
-  margin:auto;
-  margin-top:16px;
-  font-size:18px;
+.hero-left{
+  padding:46px 42px;
 }
 
-/* BUTTONS */
-
-.primary-btn{
-  background:transparent;
-  border:1px solid var(--gold);
+.section-kicker{
   color:var(--gold);
-  padding:12px 22px;
-  margin-top:30px;
-  font-size:14px;
+  font-size:12px;
+  letter-spacing:2.6px;
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+
+.hero-left h1{
+  margin:0;
+  font-family:"Cormorant Garamond", serif;
+  font-size:clamp(44px, 6vw, 76px);
+  font-weight:600;
+  line-height:.95;
+}
+
+.hero-left p{
+  max-width:690px;
+  color:var(--muted);
+  font-size:17px;
+  line-height:1.9;
+  margin:24px 0 0;
+}
+
+.hero-actions{
+  display:flex;
+  gap:12px;
+  margin-top:32px;
+  flex-wrap:wrap;
+}
+
+.hero-line{
+  height:1px;
+  width:100%;
+  background:linear-gradient(90deg, rgba(176,138,62,.5), rgba(176,138,62,0));
+  margin:38px 0 24px;
+}
+
+.hero-notes{
+  display:flex;
+  gap:28px;
+  flex-wrap:wrap;
+}
+
+.note-number{
+  font-family:"Cormorant Garamond", serif;
+  font-size:34px;
+  color:var(--text);
+}
+
+.note-label{
+  color:var(--muted);
+  font-size:13px;
+  text-transform:uppercase;
+  letter-spacing:1.4px;
+  margin-top:4px;
+}
+
+.ornament-card{
+  padding:34px 28px;
+  text-align:center;
+  min-height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+.ornament-top{
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:2px;
+  font-size:11px;
+}
+
+.ornament-emblem{
+  font-size:42px;
+  color:var(--gold);
+  margin:24px 0 18px;
+}
+
+.ornament-title{
+  font-family:"Cormorant Garamond", serif;
+  font-size:42px;
+  line-height:1;
+}
+
+.ornament-text{
+  color:var(--muted);
+  max-width:320px;
+  line-height:1.8;
+  margin-top:18px;
+}
+
+.catalog-toolbar{
+  margin-top:24px;
+  padding:22px;
+}
+
+.toolbar-top{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:16px;
+}
+
+.toolbar-top h2{
+  margin:6px 0 8px;
+  font-family:"Cormorant Garamond", serif;
+  font-size:40px;
+}
+
+.toolbar-top p{
+  margin:0;
+  color:var(--muted);
+}
+
+.search-row{
+  display:flex;
+  gap:12px;
+  margin-top:22px;
+  flex-wrap:wrap;
+}
+
+input{
+  flex:1 1 320px;
+  min-height:48px;
+  width:100%;
+  padding:14px 16px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.55);
+  color:var(--text);
+  outline:none;
+  font-size:15px;
+}
+
+input::placeholder{
+  color:#8c7a64;
+}
+
+.language-row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+
+.lang-pill{
+  min-height:40px;
+  padding:10px 16px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.4);
+  color:var(--muted);
   letter-spacing:1px;
+  text-transform:uppercase;
+  font-size:12px;
 }
 
-.primary-btn:hover{
-  background:var(--gold);
-  color:black;
+.lang-pill.active,
+.lang-pill:hover{
+  color:var(--text);
+  background:var(--gold-soft);
+  border-color:rgba(176,138,62,.35);
 }
-
-/* BOOK GRID */
 
 .book-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:40px;
-  padding:60px 40px;
+  grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+  gap:24px;
+  margin-top:24px;
 }
 
 .book-card{
-  text-align:center;
+  border:1px solid var(--line);
+  background:linear-gradient(180deg, rgba(248,241,231,.96), rgba(239,228,210,.96));
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
 }
 
-.book-card img{
+.book-cover-shell{
+  padding:14px 14px 0;
+}
+
+.book-cover-image,
+.book-cover-fallback{
   width:100%;
-  height:300px;
+  height:340px;
+  border-radius:14px;
+  display:block;
+}
+
+.book-cover-image{
   object-fit:cover;
+  background:#e8dcc7;
+}
+
+.book-cover-fallback{
+  background:
+    linear-gradient(180deg, rgba(176,138,62,.12), rgba(255,255,255,.45)),
+    linear-gradient(180deg, #f3eadc, #eadcc7);
+  border:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+.crest-mini{
+  font-family:"Cormorant Garamond", serif;
+  font-size:22px;
+  letter-spacing:3px;
+  color:var(--gold);
+}
+
+.fallback-line{
+  width:64px;
+  height:1px;
+  background:var(--gold);
+  margin:14px 0;
+}
+
+.fallback-label{
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:1.4px;
+  text-transform:uppercase;
+}
+
+.book-meta{
+  padding:18px 16px 16px;
 }
 
 .book-title{
-  font-family:"Playfair Display", serif;
-  font-size:18px;
-  margin-top:14px;
+  font-family:"Cormorant Garamond", serif;
+  font-size:27px;
+  line-height:1.05;
 }
 
 .book-author{
+  color:var(--muted);
+  font-size:14px;
+  margin-top:8px;
+  min-height:20px;
+}
+
+.book-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:16px;
+}
+
+.book-chip{
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.5);
+  color:var(--gold);
+  border-radius:999px;
+  padding:7px 10px;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:1.2px;
+}
+
+.book-open-link{
+  color:var(--text);
   font-size:13px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+.state-card{
+  margin-top:24px;
+  padding:30px;
+  text-align:center;
   color:var(--muted);
 }
 
-/* GOLD LINE */
-
-.section-head{
-  padding:0 40px;
-  margin-top:40px;
-  border-top:1px solid var(--line);
+.site-footer{
+  margin-top:44px;
+  padding-bottom:12px;
 }
 
-/* SEARCH */
-
-input{
-  background:#111;
-  border:1px solid var(--line);
-  color:white;
-  padding:12px;
-}
-
-/* GOLD DECORATION */
-
-.gold-divider{
-  width:80px;
+.footer-line{
   height:1px;
-  background:var(--gold);
-  margin:30px auto;
+  background:linear-gradient(90deg, rgba(176,138,62,.5), rgba(176,138,62,0));
 }
+
+.footer-copy{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  padding-top:16px;
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:1.4px;
+  text-transform:uppercase;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(70,55,35,.18);
+  display:grid;
+  place-items:center;
+  padding:18px;
+  z-index:20;
+}
+
+.modal-card{
+  width:min(480px, 100%);
+  padding:24px;
+}
+
+.modal-head{
+  display:flex;
+  align-items:start;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.modal-head h3{
+  margin:6px 0 0;
+  font-family:"Cormorant Garamond", serif;
+  font-size:34px;
+}
+
+.icon-button{
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:transparent;
+  color:var(--text);
+}
+
+.tab-row{
+  display:flex;
+  gap:8px;
+  margin-top:18px;
+}
+
+.tab{
+  flex:1;
+  min-height:42px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.4);
+  color:var(--muted);
+  text-transform:uppercase;
+  font-size:12px;
+  letter-spacing:1.2px;
+}
+
+.tab.active{
+  background:var(--gold-soft);
+  color:var(--text);
+}
+
+.auth-form{
+  display:grid;
+  gap:10px;
+  margin-top:16px;
+}
+
+.auth-message{
+  min-height:20px;
+  color:var(--muted);
+  margin-top:14px;
+}
+
+@media (max-width:980px){
+  .hero{grid-template-columns:1fr}
+  .nav-links{display:none}
+}
+
+@media (max-width:640px){
+  .page-shell{
+    width:min(100% - 20px, 1240px);
+    padding-top:10px;
+  }
+
+  .topbar{
+    padding:14px;
+    border-radius:16px;
+  }
+
+  .hero-left,
+  .catalog-toolbar,
+  .ornament-card,
+  .modal-card,
+  .state-card{
+    border-radius:20px;
+  }
+
+  .hero-left{
+    padding:28px 22px;
+  }
+
+  .toolbar-top{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .book-cover-image,
+  .book-cover-fallback{
+    height:300px;
+  }
+}
+""",
+    "README.txt": "AziBax cream old-money frontend theme"
+}
+
+for name, content in files.items():
+    (base / name).write_text(content, encoding="utf-8")
+
+zip_path = Path("/mnt/data/azibax_cream_old_money_frontend.zip")
+with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+    for p in base.iterdir():
+        z.write(p, arcname=p.name)
+
+print(str(zip_path))
+print("Files:")
+for p in sorted(base.iterdir()):
+    print("-", p.name)
+ดลองใช้ฟรี टिप्प to=python_user_visible.exec code
