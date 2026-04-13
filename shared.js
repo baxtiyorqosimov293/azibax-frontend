@@ -28,7 +28,12 @@ function bookLanguage(book) {
 
 function bookLink(book) {
   if (!book) return "#";
-  return `reader.html?id=${encodeURIComponent(book.id)}`;
+
+  const id = encodeURIComponent(book.id || "");
+  const title = encodeURIComponent(book.title || "");
+  const author = encodeURIComponent(book.author || "");
+
+  return `reader.html?id=${id}&title=${title}&author=${author}`;
 }
 
 function createBookCard(book) {
@@ -56,7 +61,7 @@ function createBookCard(book) {
 
   return `
     <article class="book-card">
-      <a class="book-cover-link" href="${link}" target="_blank" rel="noopener noreferrer">
+      <a class="book-cover-link" href="${link}">
         <div class="book-cover-shell">
           ${cover}
         </div>
@@ -68,8 +73,8 @@ function createBookCard(book) {
 
         <div class="book-bottom">
           <span class="book-chip">${language}</span>
-          <a class="book-open-link" href="${link}" target="_blank" rel="noopener noreferrer">
-            Открыть →
+          <a class="book-open-link" href="${link}">
+            Читать →
           </a>
         </div>
       </div>
