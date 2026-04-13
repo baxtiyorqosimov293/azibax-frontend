@@ -7,8 +7,9 @@ const fontPlusBtn = document.getElementById("fontPlusBtn");
 
 let currentFontSize = Number(localStorage.getItem("azibax_reader_font") || 20);
 
-function getParams() {
+function getReaderParams() {
   const params = new URLSearchParams(window.location.search);
+
   return {
     id: params.get("id") || "",
     title: params.get("title") || "Без названия",
@@ -17,9 +18,8 @@ function getParams() {
 }
 
 function applyFontSize() {
-  if (readerText) {
-    readerText.style.fontSize = `${currentFontSize}px`;
-  }
+  if (!readerText) return;
+  readerText.style.fontSize = `${currentFontSize}px`;
   localStorage.setItem("azibax_reader_font", String(currentFontSize));
 }
 
@@ -34,31 +34,38 @@ fontPlusBtn?.addEventListener("click", () => {
 });
 
 async function loadReaderBook() {
-  const { id, title, author } = getParams();
+  const { id, title, author } = getReaderParams();
 
   if (!id) {
-    readerBookTitle.textContent = "Книга не найдена";
-    readerBookAuthor.textContent = "AziBax Reader";
-    readerText.textContent = "Не передан идентификатор книги.";
-    readerStatus.textContent = "Ошибка";
+    if (readerBookTitle) readerBookTitle.textContent = "Книга не найдена";
+    if (readerBookAuthor) readerBookAuthor.textContent = "AziBax Reader";
+    if (readerText) readerText.textContent = "Не передан идентификатор книги.";
+    if (readerStatus) readerStatus.textContent = "Ошибка";
     return;
   }
 
   try {
-    readerStatus.textContent = "Загружаем книгу...";
-    readerBookTitle.textContent = title;
-    readerBookAuthor.textContent = author;
+    if (readerStatus) readerStatus.textContent = "Загружаем книгу...";
+    if (readerBookTitle) readerBookTitle.textContent = decodeURIComponent(title);
+    if (readerBookAuthor) readerBookAuthor.textContent = decodeURIComponent(author);
 
-    const readData = await apiFetch(`/books/read?book_id=${encodeURIComponent(id)}`);
+    const readData = await apiFetch(`/books/read?book_id=${encodeURIComponent(decodeURIComponent(id))}`);
 
-    readerText.textContent = readData.text || "Текст книги пока не добавлен.";
-    readerStatus.textContent = "Книга открыта";
+    if (readerText) {
+      readerText.textContent =
+        readData?.text || "Текст книги пока не добавлен.";
+    }
+
+    if (readerStatus) {
+      readerStatus.textContent = "Книга открыта";
+    }
   } catch (err) {
-    console.error(err);
-    readerBookTitle.textContent = title || "Ошибка загрузки";
-    readerBookAuthor.textContent = author || "AziBax Reader";
-    readerText.textContent = err.message || "Не удалось открыть книгу.";
-    readerStatus.textContent = "Ошибка";
+    console.error("Ошибка reader:", err);
+
+    if (readerBookTitle) readerBookTitle.textContent = "Ошибка загрузки";
+    if (readerBookAuthor) readerBookAuthor.textContent = "AziBax Reader";
+    if (readerText) readerText.textContent = err.message || "Не удалось открыть книгу.";
+    if (readerStatus) readerStatus.textContent = "Ошибка";
   }
 }
 
