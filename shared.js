@@ -28,7 +28,7 @@ function bookLanguage(book) {
 
 function bookLink(book) {
   if (!book) return "#";
-  return book.openlibrary_url || "#";
+  return `reader.html?id=${encodeURIComponent(book.id)}`;
 }
 
 function createBookCard(book) {
