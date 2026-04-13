@@ -7,9 +7,13 @@ const fontPlusBtn = document.getElementById("fontPlusBtn");
 
 let currentFontSize = Number(localStorage.getItem("azibax_reader_font") || 20);
 
-function getBookIdFromUrl() {
+function getParams() {
   const params = new URLSearchParams(window.location.search);
-  return params.get("id");
+  return {
+    id: params.get("id") || "",
+    title: params.get("title") || "Без названия",
+    author: params.get("author") || "Неизвестный автор",
+  };
 }
 
 function applyFontSize() {
@@ -30,10 +34,11 @@ fontPlusBtn?.addEventListener("click", () => {
 });
 
 async function loadReaderBook() {
-  const bookId = getBookIdFromUrl();
+  const { id, title, author } = getParams();
 
-  if (!bookId) {
+  if (!id) {
     readerBookTitle.textContent = "Книга не найдена";
+    readerBookAuthor.textContent = "AziBax Reader";
     readerText.textContent = "Не передан идентификатор книги.";
     readerStatus.textContent = "Ошибка";
     return;
@@ -41,17 +46,17 @@ async function loadReaderBook() {
 
   try {
     readerStatus.textContent = "Загружаем книгу...";
+    readerBookTitle.textContent = title;
+    readerBookAuthor.textContent = author;
 
-    const book = await apiFetch(`/books/${bookId}`);
-    const readData = await apiFetch(`/books/${bookId}/read`);
+    const readData = await apiFetch(`/books/read?book_id=${encodeURIComponent(id)}`);
 
-    readerBookTitle.textContent = book.title || "Без названия";
-    readerBookAuthor.textContent = book.author || "Неизвестный автор";
     readerText.textContent = readData.text || "Текст книги пока не добавлен.";
     readerStatus.textContent = "Книга открыта";
   } catch (err) {
     console.error(err);
-    readerBookTitle.textContent = "Ошибка загрузки";
+    readerBookTitle.textContent = title || "Ошибка загрузки";
+    readerBookAuthor.textContent = author || "AziBax Reader";
     readerText.textContent = err.message || "Не удалось открыть книгу.";
     readerStatus.textContent = "Ошибка";
   }
