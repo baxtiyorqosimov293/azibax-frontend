@@ -45,17 +45,22 @@ async function loadBooks(language = "") {
     renderBooks(books);
 
     catalogMeta.textContent = `Книг в выдаче: ${books.length}`;
+
     if (heroCounter) {
       heroCounter.textContent = `${books.length}+`;
     }
   } catch (err) {
+    console.error("Ошибка загрузки книг:", err);
     catalogMeta.textContent = "Ошибка подключения к API";
+
     if (booksGrid) {
       booksGrid.innerHTML = `<div class="state-card">${escapeHtml(err.message || "Не удалось загрузить книги")}</div>`;
     }
+
     if (recommendedGrid) {
       recommendedGrid.innerHTML = "";
     }
+
     renderFeaturedBook(null);
   }
 }
@@ -83,8 +88,7 @@ function renderFeaturedBook(book) {
   featuredTitle.textContent = book.title || "Без названия";
   featuredAuthor.textContent = book.author || "Неизвестный автор";
   featuredDescription.textContent =
-    book.description ||
-    "Издание из цифрового собрания AziBax.";
+    book.description || "Издание из цифрового собрания AziBax.";
 
   if (book.cover) {
     featuredCover.innerHTML = `
@@ -159,14 +163,18 @@ async function searchBooks() {
     renderBooks(books);
 
     catalogMeta.textContent = `Найдено: ${books.length}`;
+
     if (heroCounter) {
       heroCounter.textContent = `${books.length}+`;
     }
   } catch (err) {
+    console.error("Ошибка поиска:", err);
     catalogMeta.textContent = "Ошибка поиска";
+
     if (booksGrid) {
       booksGrid.innerHTML = `<div class="state-card">${escapeHtml(err.message || "Не удалось выполнить поиск")}</div>`;
     }
+
     if (recommendedGrid) {
       recommendedGrid.innerHTML = "";
     }
@@ -180,6 +188,7 @@ function activateLanguageButtons() {
       btn.classList.add("active");
 
       currentLanguage = btn.dataset.language || "";
+
       if (searchInput) {
         searchInput.value = "";
       }
@@ -203,16 +212,145 @@ function updateAuthButton() {
   openAuthBtn.textContent = getToken() ? "Вход выполнен" : "Войти";
 }
 
+function openModal() {
+  if (authModal) authModal.classList.remove("hidden");
+}
+
+function closeModal() {
+  if (authModal) authModal.classList.add("hidden");
+}
+
+async function handleRegister(e) {
+  e.preventDefault();
+
+  if (!authMessage) return;
+
+  const fullName = document.getElementById("registerName")?.value.trim() || "";
+  const email = document.getElementById("registerEmail")?.value.trim() || "";
+  const password = document.getElementById("registerPassword")?.value.trim() || "";
+
+  if (!email || !password) {
+    authMessage.textContent = "Заполни почту и пароль.";
+    return;
+  }
+
+  authMessage.textContent = "Создаём аккаунт...";
+
+  try {
+    const res = await fetch(`${window.AZIBAX_API}/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        full_name: fullName,
+        email: email,
+        password: password
+      })
+    });
+
+    let data = null;
+
+    try {
+      data = await res.json();
+    } catch (_) {
+      data = null;
+    }
+
+    if (!res.ok) {
+      authMessage.textContent = data?.detail || "Ошибка регистрации";
+      return;
+    }
+
+    authMessage.textContent = "Аккаунт создан. Теперь можно войти.";
+
+    const loginTab = document.querySelector('.tab[data-tab="login"]');
+    const registerTab = document.querySelector('.tab[data-tab="register"]');
+
+    if (loginTab && registerTab && loginForm && registerForm) {
+      registerTab.classList.remove("active");
+      loginTab.classList.add("active");
+      registerForm.classList.add("hidden");
+      loginForm.classList.remove("hidden");
+    }
+
+    const loginEmail = document.getElementById("loginEmail");
+    const loginPassword = document.getElementById("loginPassword");
+
+    if (loginEmail) loginEmail.value = email;
+    if (loginPassword) loginPassword.value = password;
+  } catch (err) {
+    console.error("Ошибка регистрации:", err);
+    authMessage.textContent = "Load failed";
+  }
+}
+
+async function handleLogin(e) {
+  e.preventDefault();
+
+  if (!authMessage) return;
+
+  const email = document.getElementById("loginEmail")?.value.trim() || "";
+  const password = document.getElementById("loginPassword")?.value.trim() || "";
+
+  if (!email || !password) {
+    authMessage.textContent = "Заполни почту и пароль.";
+    return;
+  }
+
+  authMessage.textContent = "Выполняем вход...";
+
+  try {
+    const res = await fetch(`${window.AZIBAX_API}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password
+      })
+    });
+
+    let data = null;
+
+    try {
+      data = await res.json();
+    } catch (_) {
+      data = null;
+    }
+
+    if (!res.ok) {
+      authMessage.textContent = data?.detail || "Ошибка входа";
+      return;
+    }
+
+    if (data?.access_token) {
+      setToken(data.access_token);
+    }
+
+    authMessage.textContent = "Добро пожаловать.";
+    updateAuthButton();
+
+    setTimeout(() => {
+      closeModal();
+    }, 600);
+  } catch (err) {
+    console.error("Ошибка входа:", err);
+    authMessage.textContent = "Load failed";
+  }
+}
+
 function initAuthModal() {
-  if (!openAuthBtn || !closeAuthBtn || !authModal) return;
+  if (!authModal) return;
 
-  openAuthBtn.addEventListener("click", () => {
-    authModal.classList.remove("hidden");
-  });
+  if (openAuthBtn) {
+    openAuthBtn.addEventListener("click", openModal);
+  }
 
-  closeAuthBtn.addEventListener("click", () => {
-    authModal.classList.add("hidden");
-  });
+  if (closeAuthBtn) {
+    closeAuthBtn.addEventListener("click", closeModal);
+  }
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
@@ -220,6 +358,7 @@ function initAuthModal() {
       tab.classList.add("active");
 
       const isLogin = tab.dataset.tab === "login";
+
       if (loginForm) loginForm.classList.toggle("hidden", !isLogin);
       if (registerForm) registerForm.classList.toggle("hidden", isLogin);
       if (authMessage) authMessage.textContent = "";
@@ -227,52 +366,11 @@ function initAuthModal() {
   });
 
   if (loginForm) {
-    loginForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (authMessage) authMessage.textContent = "Выполняем вход...";
-
-      try {
-        const result = await apiFetch("/auth/login", {
-          method: "POST",
-          body: JSON.stringify({
-            email: document.getElementById("loginEmail").value.trim(),
-            password: document.getElementById("loginPassword").value.trim()
-          })
-        });
-
-        setToken(result.access_token);
-        if (authMessage) authMessage.textContent = "Добро пожаловать.";
-        updateAuthButton();
-
-        setTimeout(() => {
-          authModal.classList.add("hidden");
-        }, 600);
-      } catch (err) {
-        if (authMessage) authMessage.textContent = err.message || "Ошибка входа";
-      }
-    });
+    loginForm.addEventListener("submit", handleLogin);
   }
 
   if (registerForm) {
-    registerForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      if (authMessage) authMessage.textContent = "Создаём аккаунт...";
-
-      try {
-        await apiFetch("/auth/register", {
-          method: "POST",
-          body: JSON.stringify({
-            full_name: document.getElementById("registerName").value.trim(),
-            email: document.getElementById("registerEmail").value.trim(),
-            password: document.getElementById("registerPassword").value.trim()
-          })
-        });
-
-        if (authMessage) authMessage.textContent = "Аккаунт создан. Теперь можно войти.";
-      } catch (err) {
-        if (authMessage) authMessage.textContent = err.message || "Ошибка регистрации";
-      }
-    });
+    registerForm.addEventListener("submit", handleRegister);
   }
 
   updateAuthButton();
