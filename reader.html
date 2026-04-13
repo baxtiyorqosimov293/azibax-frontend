@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AziBax Reader</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=40" />
+  <style>
+    .reader-shell{
+      width:min(920px, calc(100% - 24px));
+      margin:24px auto 40px;
+    }
+
+    .reader-topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      padding:16px 18px;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:var(--panel);
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+
+    .reader-title{
+      font-family:"Cormorant Garamond", serif;
+      font-size:34px;
+      line-height:1;
+      margin:0;
+    }
+
+    .reader-sub{
+      color:var(--muted);
+      margin-top:4px;
+      font-size:14px;
+    }
+
+    .reader-controls{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .reader-card{
+      border:1px solid var(--line);
+      border-radius:26px;
+      background:#fffdf9;
+      box-shadow:var(--shadow);
+      padding:28px 24px;
+    }
+
+    .reader-text{
+      font-size:20px;
+      line-height:2;
+      color:var(--text);
+      white-space:pre-wrap;
+    }
+
+    .reader-footer{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:18px;
+      flex-wrap:wrap;
+    }
+
+    .reader-status{
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    @media (max-width:640px){
+      .reader-title{font-size:28px}
+      .reader-text{font-size:18px; line-height:1.9}
+      .reader-card{padding:22px 18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <div class="crest">
+          <div class="crest-crown">♛</div>
+          <div class="crest-mark">AZBX</div>
+        </div>
+        <div class="brand-copy">
+          <div class="brand-name">AziBax</div>
+          <div class="brand-sub">Частное собрание</div>
+        </div>
+      </a>
+
+      <nav class="nav-links">
+        <a href="index.html">Каталог</a>
+        <a href="favorites.html">Кабинет</a>
+      </nav>
+    </header>
+  </div>
+
+  <div class="reader-shell">
+    <div class="reader-topbar">
+      <div>
+        <h1 class="reader-title" id="readerBookTitle">Загрузка книги...</h1>
+        <div class="reader-sub" id="readerBookAuthor">AziBax Reader</div>
+      </div>
+
+      <div class="reader-controls">
+        <button class="ghost-button small" id="fontMinusBtn">A-</button>
+        <button class="ghost-button small" id="fontPlusBtn">A+</button>
+        <a class="secondary-button small" href="index.html">Назад</a>
+      </div>
+    </div>
+
+    <div class="reader-card">
+      <div class="reader-text" id="readerText">Загрузка текста...</div>
+
+      <div class="reader-footer">
+        <div class="reader-status" id="readerStatus">Подключение к книге...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js?v=40"></script>
+  <script src="shared.js?v=40"></script>
+  <script src="reader.js?v=40"></script>
+</body>
+</html>
